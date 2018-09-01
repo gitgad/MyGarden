@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
@@ -7,16 +8,26 @@
 
     <ImageView
         android:id="@+id/widget_water_button"
-        android:src="@drawable/water_drop_blue"
-        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/water_drop_blue" />
 
     <ImageView
         android:id="@+id/widget_plant_image"
-        android:src="@drawable/grass"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/grass" />
+
+    <TextView
+        android:id="@+id/widget_plant_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        tools:text="1" />
 
 </LinearLayout>
