@@ -1,10 +1,13 @@
 package com.example.android.mygarden;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -20,8 +23,26 @@ public class PlantWidgetProvider extends AppWidgetProvider {
 
     public static final String TAG = PlantWidgetProvider.class.getSimpleName();
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int imgSrcId, int appWidgetId, long plantId, boolean showWater) {
+
+        // Get current widget width to decide on single plant vs garden grid view
+        Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
+
+        RemoteViews remoteViews;
+        if(width < 300){
+            remoteViews = getSinglePlantRemoteView(context, imgSrcId, plantId, showWater);
+        } else {
+            remoteViews = getGardenGridRemoteView(context);
+        }
+
+        appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+    }
+
+
+    private static RemoteViews getSinglePlantRemoteView(Context context, int imgSrcId, long plantId, boolean showWater) {
 
         // Start details/main activity pending intent
         Intent startActivityIntent;
@@ -34,7 +55,8 @@ public class PlantWidgetProvider extends AppWidgetProvider {
             startActivityIntent = new Intent(context, MainActivity.class);
         }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, startActivityIntent, 0);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(context, 0, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Start plant watering service
         Intent startWaterPlantsService = new Intent(context, PlantWateringService.class);
@@ -61,8 +83,12 @@ public class PlantWidgetProvider extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.widget_plant_image, pendingIntent);
         views.setOnClickPendingIntent(R.id.widget_water_button, wateringPendingIntent);
 
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
+        return views;
+    }
+
+
+    private static RemoteViews getGardenGridRemoteView(Context context) {
+        return null;
     }
 
     @Override
@@ -85,6 +111,12 @@ public class PlantWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    @Override
+    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
+        PlantWateringService.startActionUpdatePlantWidgets(context);
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }
 }
 
