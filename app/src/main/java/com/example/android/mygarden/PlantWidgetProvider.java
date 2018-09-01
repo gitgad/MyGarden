@@ -15,7 +15,7 @@ import com.example.android.mygarden.ui.MainActivity;
 public class PlantWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                int imgSrcId, int appWidgetId) {
 
         // Start main activity pending intent
         Intent startMainActivityIntent = new Intent(context, MainActivity.class);
@@ -29,6 +29,9 @@ public class PlantWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.plant_widget_provider);
 
+        // Set image resource
+        views.setImageViewResource(R.id.widget_plant_image, imgSrcId);
+
         views.setOnClickPendingIntent(R.id.widget_plant_image, pendingIntent);
         views.setOnClickPendingIntent(R.id.widget_water_button, wateringPendingIntent);
 
@@ -38,9 +41,13 @@ public class PlantWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
+    }
+
+    public static void updatePlantsWidget(Context ctx, AppWidgetManager appWidgetManager, int[] appWidgetIds, int imgSrcId){
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(ctx, appWidgetManager, imgSrcId, appWidgetId);
         }
     }
 
