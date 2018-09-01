@@ -26,9 +26,9 @@ public class PlantWidgetProvider extends AppWidgetProvider {
         // Start details/main activity pending intent
         Intent startActivityIntent;
         if(plantId != PlantContract.INVALID_PLANT_ID){
-            Log.d(TAG, "Plant id = " + plantId + ", starting details activity");
+            Log.d(TAG, "PlantId = " + plantId + ", starting details activity");
             startActivityIntent = new Intent(context, PlantDetailActivity.class);
-            startActivityIntent.putExtra(PlantWateringService.EXTRA_PLANT_ID, plantId);
+            startActivityIntent.putExtra(PlantDetailActivity.EXTRA_PLANT_ID, plantId);
         } else {
             Log.w(TAG, "Invalid plant id, starting main activity");
             startActivityIntent = new Intent(context, MainActivity.class);
@@ -39,7 +39,7 @@ public class PlantWidgetProvider extends AppWidgetProvider {
         // Start plant watering service
         Intent startWaterPlantsService = new Intent(context, PlantWateringService.class);
         startWaterPlantsService.setAction(PlantWateringService.ACTION_WATER_PLANT);
-        startWaterPlantsService.putExtra(PlantWateringService.EXTRA_PLANT_ID, plantId);
+        startWaterPlantsService.putExtra(PlantDetailActivity.EXTRA_PLANT_ID, plantId);
         PendingIntent wateringPendingIntent = PendingIntent.getService(context, 0, startWaterPlantsService, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Construct the RemoteViews object

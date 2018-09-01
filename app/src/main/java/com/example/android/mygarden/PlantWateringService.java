@@ -12,13 +12,13 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.example.android.mygarden.provider.PlantContract;
+import com.example.android.mygarden.ui.PlantDetailActivity;
 import com.example.android.mygarden.utils.PlantUtils;
 
 public class PlantWateringService extends IntentService {
 
     public static final String ACTION_WATER_PLANT = "com.example.android.mygarden.action.water_plant";
     public static final String ACTION_UPDATE_PLANT_WIDGETS = "com.example.android.mygarden.action.update_plant_widgets";
-    public static final String EXTRA_PLANT_ID = "com.example.android.mygarden.extra.plant_id";
 
     public PlantWateringService() {
         super("PlantWateringService");
@@ -27,7 +27,7 @@ public class PlantWateringService extends IntentService {
     public static void startActionWaterPlant(Context ctx, long plantId){
         Intent intent = new Intent(ctx, PlantWateringService.class);
         intent.setAction(ACTION_WATER_PLANT);
-        intent.putExtra(EXTRA_PLANT_ID, plantId);
+        intent.putExtra(PlantDetailActivity.EXTRA_PLANT_ID, plantId);
         ctx.startService(intent);
     }
 
@@ -42,7 +42,7 @@ public class PlantWateringService extends IntentService {
         if(intent != null){
             final String action = intent.getAction();
             if(ACTION_WATER_PLANT.equals(action)){
-                final long plantId = intent.getLongExtra(EXTRA_PLANT_ID, PlantContract.INVALID_PLANT_ID);
+                final long plantId = intent.getLongExtra(PlantDetailActivity.EXTRA_PLANT_ID, PlantContract.INVALID_PLANT_ID);
                 handleActionWaterPlant(plantId);
             } else if(ACTION_UPDATE_PLANT_WIDGETS.equals(action)){
                 handleActionUpdatePlantWidgets();
